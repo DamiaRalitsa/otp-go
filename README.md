@@ -1,6 +1,6 @@
-# BookingToGo Customer Registration API
+# Customer Registration API
 
-A technical test project for BookingToGo, built with Go. This API manages customers, families, and nationalities, using PostgreSQL and Gorilla Mux.
+A technical test project, built with Go. This API manages customers, families, and nationalities, using PostgreSQL and Gorilla Mux.
 
 ## Features
 - CRUD for Customers
