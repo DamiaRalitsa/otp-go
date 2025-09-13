@@ -54,6 +54,8 @@ pkg/postgres/connection.go
    ```bash
    docker build -t bookingtogo-app .
    docker run -it --rm -p 8334:8334 -v $(pwd)/config.json:/config.json bookingtogo-app
+
+   or simply run "make run" on terminal
    ```
 4. Or run locally:
    ```bash
