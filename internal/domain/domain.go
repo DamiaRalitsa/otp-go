@@ -33,12 +33,12 @@ type NationalityRepository interface {
 // Customer
 // =====================
 type Customer struct {
-	ID            int       `json:"id" db:"cst_id"`                         // cst_id
-	NationalityID int       `json:"nationality_id" db:"nationality_id"`     
-	Name          string    `json:"name" db:"cst_name"`                     // cst_name
-	DOB           time.Time `json:"dob" db:"cst_dob"`                       // cst_dob
-	PhoneNumber   string    `json:"phone_number" db:"cst_phonenum"`         // cst_phonenum
-	Email         string    `json:"email" db:"cst_email"`                   // cst_email
+	ID            int       `json:"id" db:"cst_id"` // cst_id
+	NationalityID int       `json:"nationality_id" db:"nationality_id"`
+	Name          string    `json:"name" db:"cst_name"`             // cst_name
+	DOB           time.Time `json:"dob" db:"cst_dob"`               // cst_dob
+	PhoneNumber   string    `json:"phone_number" db:"cst_phonenum"` // cst_phonenum
+	Email         string    `json:"email" db:"cst_email"`           // cst_email
 }
 
 // Customer Usecase Interface
@@ -63,11 +63,11 @@ type CustomerRepository interface {
 // Family
 // =====================
 type Family struct {
-	ID         int       `json:"id" db:"ft_id"`                   // ft_id
-	CustomerID int       `json:"customer_id" db:"cst_id"`         // cst_id
-	Relation   string    `json:"relation" db:"ft_relation"`       // ft_relation
-	Name       string    `json:"name" db:"ft_name"`               // ft_name
-	DOB        time.Time `json:"dob" db:"ft_dob"`                 // ft_dob
+	ID         int       `json:"id" db:"ft_id"`             // ft_id
+	CustomerID int       `json:"customer_id" db:"cst_id"`   // cst_id
+	Relation   string    `json:"relation" db:"ft_relation"` // ft_relation
+	Name       string    `json:"name" db:"ft_name"`         // ft_name
+	DOB        time.Time `json:"dob" db:"ft_dob"`           // ft_dob
 }
 
 // Family Usecase Interface
