@@ -9,5 +9,8 @@ run:
 build:
 	go build -o app cmd/app/main.go
 
-test: 
+test:
+	go test -v ./internal/usecases/otp/...
+	
+test-coverage: 
 	go test -v -cover -coverprofile=coverage.out ./internal/usecases/otp/... && go tool cover -html=coverage.out -o coverage.html
