@@ -1,40 +1,62 @@
 package route
 
 import (
-	"net/http"
+	"encoding/json"
+	"os"
 
-	handler "bookingtogo/internal/delivery/http"
+	"github.com/gofiber/contrib/fiberzerolog"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/rs/zerolog"
 
-	"github.com/gorilla/mux"
+	"sqe/internal/delivery/http"
 )
 
-func NewRouter(
-	customerHandler *handler.CustomerHandler,
-	familyHandler *handler.FamilyHandler,
-	nationalityHandler *handler.NationalityHandler,
-) *mux.Router {
-	r := mux.NewRouter()
+type RouteConfig struct {
+	App           *fiber.App
+	otpController *http.OTPController
+}
 
-	// Nationality routes
-	r.HandleFunc("/nationalities", nationalityHandler.GetAll).Methods(http.MethodGet)
-	r.HandleFunc("/nationalities/{id:[0-9]+}", nationalityHandler.GetByID).Methods(http.MethodGet)
-	r.HandleFunc("/nationalities", nationalityHandler.Create).Methods(http.MethodPost)
-	r.HandleFunc("/nationalities/{id:[0-9]+}", nationalityHandler.Update).Methods(http.MethodPut)
-	r.HandleFunc("/nationalities/{id:[0-9]+}", nationalityHandler.Delete).Methods(http.MethodDelete)
+func NewRouteConfig() *RouteConfig {
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-	// Customer routes
-	r.HandleFunc("/customers", customerHandler.GetAll).Methods(http.MethodGet)
-	r.HandleFunc("/customers/{id:[0-9]+}", customerHandler.GetByID).Methods(http.MethodGet)
-	r.HandleFunc("/customers", customerHandler.Create).Methods(http.MethodPost)
-	r.HandleFunc("/customers/{id:[0-9]+}", customerHandler.Update).Methods(http.MethodPut)
-	r.HandleFunc("/customers/{id:[0-9]+}", customerHandler.Delete).Methods(http.MethodDelete)
+	app := fiber.New(fiber.Config{
+		Prefork:     false,
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+		BodyLimit:   100 * 1024 * 1024,
+	})
 
-	// Family routes
-	r.HandleFunc("/customers/{cst_id:[0-9]+}/family", familyHandler.GetAllByCustomer).Methods(http.MethodGet)
-	r.HandleFunc("/family/{ft_id:[0-9]+}", familyHandler.GetByID).Methods(http.MethodGet)
-	r.HandleFunc("/customers/{cst_id:[0-9]+}/family", familyHandler.Create).Methods(http.MethodPost)
-	r.HandleFunc("/family/{ft_id:[0-9]+}", familyHandler.Update).Methods(http.MethodPut)
-	r.HandleFunc("/family/{ft_id:[0-9]+}", familyHandler.Delete).Methods(http.MethodDelete)
+	app.Use(func(c *fiber.Ctx) error {
+		if c.Path() == "/metrics" {
+			return c.Next()
+		}
+		return fiberzerolog.New(fiberzerolog.Config{
+			Logger: &logger,
+		})(c)
+	})
 
-	return r
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
+	OTPController := http.NewOTPController()
+
+	routeConfig := RouteConfig{
+		App:           app,
+		otpController: OTPController,
+	}
+
+	routeConfig.SetupRoute()
+	return &routeConfig
+}
+
+func (rc *RouteConfig) SetupRoute() {
+	testGroup := rc.App.Group("/api/test")
+	testGroup.Post("/request-otp", rc.otpController.RequestOTP)
+	testGroup.Post("/verify-otp", rc.otpController.VerifyOTP)
+}
+
+func (rc *RouteConfig) Listen(address string) {
+	rc.App.Listen(address)
 }

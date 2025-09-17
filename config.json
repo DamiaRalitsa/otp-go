@@ -2,10 +2,10 @@
     "debug": true,
     "server": {
         "host": "0.0.0.0",
-        "port": 8334,
-        "name": "bookingtogo-api",
+        "port": 8335,
+        "name": "otp-api",
         "version": "1.0.0",
-        "description": "bookingtogo API",
+        "description": "otp API",
         "env": "development"
     },
     "databasePostgres": {

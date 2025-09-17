@@ -1,0 +1,8 @@
+mode: set
+sqe/internal/usecases/otp/otp.go:23.72,24.22 1 1
+sqe/internal/usecases/otp/otp.go:24.22,26.3 1 0
+sqe/internal/usecases/otp/otp.go:27.2,30.3 2 1
+sqe/internal/usecases/otp/otp.go:33.95,44.94 4 1
+sqe/internal/usecases/otp/otp.go:44.94,46.3 1 1
+sqe/internal/usecases/otp/otp.go:48.2,55.22 3 1
+sqe/internal/usecases/otp/otp.go:58.95,60.2 1 1
