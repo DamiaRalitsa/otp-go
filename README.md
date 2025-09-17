@@ -64,7 +64,7 @@ pkg/
 3. Build and run with Docker:
    ```bash
    docker build -t otp-service .
-   docker run -it --rm -p 8334:8334 -v $(pwd)/config.json:/config.json otp-service
+   docker run -it --rm -p 8335:8335 -v $(pwd)/config.json:/config.json otp-service
 
    or simply run "make run" on terminal
    ```
