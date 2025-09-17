@@ -1,13 +1,14 @@
-# Customer Registration API
+# OTP Service API
 
-A technical test project, built with Go. This API manages customers, families, and nationalities, using PostgreSQL and Gorilla Mux.
+A technical test project for OTP (One-Time Password) service, built with Go. This API provides OTP generation and verification functionality using PostgreSQL and Gorilla Mux.
 
 ## Features
-- CRUD for Customers
-- CRUD for Families (linked to Customers)
-- CRUD for Nationalities
+- OTP Generation
+- OTP Verification
 - RESTful endpoints
+- PostgreSQL database integration
 - Dockerized for easy deployment
+- Unit tests with high coverage
 
 ## Project Structure
 ```
@@ -16,24 +17,34 @@ Dockerfile
 go.mod
 go.sum
 Makefile
-cmd/app/main.go
-deployments/docker-compose.yml
+README.md
+cmd/
+  app/
+    main.go
+deployments/
+  docker-compose.yml
 internal/
-  delivery/http/
-    customer.go
-    family.go
-    nationality.go
-    routes/route.go
-  domain/domain.go
+  delivery/
+    http/
+      otp_controller.go
+      routes/
+        route.go
+  domain/
+    domain.go
+    otp.go
+  presenters/
+    otp.go
+    response.go
   repositories/
-    customer.go
-    family.go
-    nationality.go
+    otp/
+      otp.go
   usecases/
-    customer.go
-    family.go
-    nationality.go
-pkg/postgres/connection.go
+    otp/
+      otp.go
+      otp_test.go
+pkg/
+  postgres/
+    connection.go
 ```
 
 ## Getting Started
@@ -46,14 +57,14 @@ pkg/postgres/connection.go
 ### Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/DamiaRalitsa/customer-registration-go.git
-   cd customer-registration-go
+   git clone https://github.com/DamiaRalitsa/otp-go.git
+   cd otp-go
    ```
 2. Configure your database connection in `config.json`.
 3. Build and run with Docker:
    ```bash
-   docker build -t bookingtogo-app .
-   docker run -it --rm -p 8334:8334 -v $(pwd)/config.json:/config.json bookingtogo-app
+   docker build -t otp-service .
+   docker run -it --rm -p 8334:8334 -v $(pwd)/config.json:/config.json otp-service
 
    or simply run "make run" on terminal
    ```
@@ -62,27 +73,46 @@ pkg/postgres/connection.go
    go run cmd/app/main.go
    ```
 
+### Testing
+Run the unit tests:
+```bash
+make test
+```
+
+Generate test coverage report:
+```bash
+make test-coverage
+```
+
 ### API Endpoints
-#### Customers
-- `GET /customers` - List all customers
-- `GET /customers/{id}` - Get customer by ID
-- `POST /customers` - Create customer
-- `PUT /customers/{id}` - Update customer
-- `DELETE /customers/{id}` - Delete customer
+#### OTP Service
+- `POST /send-otp` - Generate and send OTP
+  ```json
+  {
+    "user_id": "user123"
+  }
+  ```
+  Response:
+  ```json
+  {
+    "user_id": "user123",
+    "otp": "123456"
+  }
+  ```
 
-#### Families
-- `GET /customers/{cst_id}/family` - List families for a customer
-- `GET /family/{ft_id}` - Get family member by ID
-- `POST /customers/{cst_id}/family` - Add family member
-- `PUT /family/{ft_id}` - Update family member
-- `DELETE /family/{ft_id}` - Delete family member
-
-#### Nationalities
-- `GET /nationalities` - List all nationalities
-- `GET /nationalities/{id}` - Get nationality by ID
-- `POST /nationalities` - Create nationality
-- `PUT /nationalities/{id}` - Update nationality
-- `DELETE /nationalities/{id}` - Delete nationality
+- `POST /verify-otp` - Verify OTP
+  ```json
+  {
+    "user_id": "user123",
+    "otp": "123456"
+  }
+  ```
+  Response:
+  ```json
+  {
+    "valid": true
+  }
+  ```
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
